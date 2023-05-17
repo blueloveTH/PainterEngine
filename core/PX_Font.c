@@ -749,23 +749,23 @@ px_int PX_FontModuleDrawText(px_surface *psurface,PX_FontModule *mod,px_int x,px
 }
 
 void PX_FontModuleDrawTextEx(px_memorypool* mp,px_surface *psurface,PX_FontModule *mod,px_int x,px_int y,PX_ALIGN align,const px_char *Text,px_color Color, float sx, float sy){
-    px_int frWidth, frHeight;
+	px_int frWidth, frHeight;
 	PX_FontModuleTextGetRenderWidthHeight(mod, Text, &frWidth, &frHeight);
 	if(frWidth == 0 || frHeight == 0) PXError("frWidth == 0 || frHeight == 0");
-    px_surface tmp, out;
+	px_surface tmp, out;
 	px_bool ok;
 	// 创建临时surface
-    ok = PX_SurfaceCreate(mp, frWidth, frHeight, &tmp);
+	ok = PX_SurfaceCreate(mp, frWidth, frHeight, &tmp);
 	if(!ok) PX_ASSERT();
-    // 绘制在临时surface上
-    PX_FontModuleDrawText(&tmp, mod, 0, 0, PX_ALIGN_LEFTTOP, Text, Color);
-    // 对临时surface进行缩放
+	// 绘制在临时surface上
+	PX_FontModuleDrawText(&tmp, mod, 0, 0, PX_ALIGN_LEFTTOP, Text, Color);
+	// 对临时surface进行缩放
 	frWidth = (px_int)(frWidth * sx);
 	frHeight = (px_int)(frHeight * sy);
-    ok = PX_TextureCreateScale(mp, &tmp, frWidth, frHeight, &out);
+	ok = PX_TextureCreateScale(mp, &tmp, frWidth, frHeight, &out);
 	if(!ok) PX_ASSERT();
 	PX_SurfaceFree(&tmp);
-    // 处理对齐方式
+	// 处理对齐方式
 	switch (align)
 	{
 	case PX_ALIGN_LEFTTOP:
@@ -800,12 +800,12 @@ void PX_FontModuleDrawTextEx(px_memorypool* mp,px_surface *psurface,PX_FontModul
 		break;
 	}
 	// 将缩放后的surface绘制到目标surface上
-    for(int i=0; i<out.width; ++i){
+	for(int i=0; i<out.width; ++i){
 		for(int j=0; j<out.height; ++j){
 			px_color clr = PX_SURFACECOLOR(&out, i, j);
 			PX_SurfaceDrawPixel(psurface, x+i, y+j, clr);
 		}
 	}
-    PX_SurfaceFree(&out);
+	PX_SurfaceFree(&out);
 }
 
